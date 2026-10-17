@@ -1,0 +1,8 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:title="@string/nujuma_debugging_preferences_title"
+        app:summary="@string/nujuma_debugging_preferences_summary"
+        app:fragment="com.nujuma.app.fragments.settings.nujuma_api.DebuggingPreferencesFragment"/>
+
+</PreferenceScreen>

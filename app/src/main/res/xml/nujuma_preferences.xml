@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:title="@string/nujuma_debugging_preferences_title"
+        app:summary="@string/nujuma_debugging_preferences_summary"
+        app:fragment="com.nujuma.app.fragments.settings.nujuma.DebuggingPreferencesFragment"/>
+
+    <Preference
+        app:title="@string/nujuma_terminal_io_preferences_title"
+        app:summary="@string/nujuma_terminal_io_preferences_summary"
+        app:fragment="com.nujuma.app.fragments.settings.nujuma.TerminalIOPreferencesFragment"/>
+
+    <Preference
+        app:title="@string/nujuma_terminal_view_preferences_title"
+        app:summary="@string/nujuma_terminal_view_preferences_summary"
+        app:fragment="com.nujuma.app.fragments.settings.nujuma.TerminalViewPreferencesFragment"/>
+
+</PreferenceScreen>

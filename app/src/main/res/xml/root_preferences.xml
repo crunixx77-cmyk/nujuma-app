@@ -1,0 +1,49 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:key="nujuma"
+        app:title="@string/nujuma_preferences_title"
+        app:summary="@string/nujuma_preferences_summary"
+        app:fragment="com.nujuma.app.fragments.settings.NujumaPreferencesFragment"/>
+
+    <Preference
+        app:key="nujuma_api"
+        app:title="@string/nujuma_api_preferences_title"
+        app:summary="@string/nujuma_api_preferences_summary"
+        app:isPreferenceVisible="false"
+        app:fragment="com.nujuma.app.fragments.settings.NujumaAPIPreferencesFragment"/>
+
+    <Preference
+        app:key="nujuma_float"
+        app:title="@string/nujuma_float_preferences_title"
+        app:summary="@string/nujuma_float_preferences_summary"
+        app:isPreferenceVisible="false"
+        app:fragment="com.nujuma.app.fragments.settings.NujumaFloatPreferencesFragment"/>
+
+    <Preference
+        app:key="nujuma_tasker"
+        app:title="@string/nujuma_tasker_preferences_title"
+        app:summary="@string/nujuma_tasker_preferences_summary"
+        app:isPreferenceVisible="false"
+        app:fragment="com.nujuma.app.fragments.settings.NujumaTaskerPreferencesFragment"/>
+
+    <Preference
+        app:key="nujuma_widget"
+        app:title="@string/nujuma_widget_preferences_title"
+        app:summary="@string/nujuma_widget_preferences_summary"
+        app:isPreferenceVisible="false"
+        app:fragment="com.nujuma.app.fragments.settings.NujumaWidgetPreferencesFragment"/>
+
+    <Preference
+        app:key="about"
+        app:title="@string/about_preference_title"
+        app:persistent="false"/>
+    <!-- app:layout="@layout/preference_markdown_text" -->
+
+    <Preference
+        app:key="donate"
+        app:title="@string/donate_preference_title"
+        app:persistent="false"
+        app:isPreferenceVisible="false"/>
+
+</PreferenceScreen>

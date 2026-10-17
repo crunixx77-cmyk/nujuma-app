@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+     https://material.io/develop/android/theming/dark
+    -->
+
+    <!-- NujumaApp Light DarkActionBar theme. -->
+    <style name="Theme.NujumaApp.Light.DarkActionBar" parent="Theme.BaseActivity.Light.DarkActionBar"/>
+    <!-- NujumaApp Light NoActionBar theme. -->
+    <style name="Theme.NujumaApp.Light.NoActionBar" parent="Theme.BaseActivity.Light.NoActionBar"/>
+
+    <!-- NujumaApp DayNight DarkActionBar theme. -->
+    <style name="Theme.NujumaApp.DayNight.DarkActionBar" parent="Theme.BaseActivity.DayNight.DarkActionBar"/>
+    <!-- NujumaApp DayNight NoActionBar theme. -->
+    <style name="Theme.NujumaApp.DayNight.NoActionBar" parent="Theme.BaseActivity.DayNight.NoActionBar"/>
+
+
+    <!-- NujumaActivity DayNight NoActionBar theme. -->
+    <style name="Theme.NujumaActivity.DayNight.NoActionBar" parent="Theme.NujumaApp.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+
+        <item name="android:windowBackground">@color/black</item>
+
+        <!-- Avoid action mode toolbar pushing down terminal content when
+             selecting text on pre-6.0 (non-floating toolbar). -->
+        <item name="android:windowActionModeOverlay">true</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+
+        <!-- https://developer.android.com/training/tv/start/start.html#transition-color -->
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+
+        <!-- Left drawer. -->
+        <item name="buttonBarButtonStyle">@style/NujumaActivity.Drawer.ButtonBarStyle.Light</item>
+        <item name="nujumaActivityDrawerBackground">@color/white</item>
+        <item name="nujumaActivityDrawerImageTint">@color/black</item>
+
+        <!-- Extra keys colors. -->
+        <item name="extraKeysButtonTextColor">@color/white</item>
+        <item name="extraKeysButtonActiveTextColor">@color/red_400</item>
+        <item name="extraKeysButtonBackgroundColor">@color/black</item>
+        <item name="extraKeysButtonActiveBackgroundColor">@color/grey_500</item>
+    </style>
+
+</resources>
