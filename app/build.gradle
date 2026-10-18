@@ -41,9 +41,9 @@ android {
         implementation "io.noties.markwon:recycler:$markwonVersion"
         implementation "androidx.window:window:1.0.0-alpha09"
 
-        implementation(name: 'Nujuma-shared-debug', ext: 'aar')
-        implementation(name: 'terminal-emulator-debug', ext: 'aar')
-        implementation(name: 'terminal-view-debug', ext: 'aar')
+        implementation(name: 'Nujuma-shared-release', ext: 'aar')
+        implementation(name: 'terminal-emulator-release', ext: 'aar')
+        implementation(name: 'terminal-view-release', ext: 'aar')
     }
 
     defaultConfig {
@@ -180,7 +180,7 @@ task downloadAndExtractBundle() {
         libsDir.mkdirs()
         cppDir.mkdirs()
 
-        def remoteUrl = "https://github.com/crunixx77-cmyk/kucing/releases/download/nujuma-absolute/b.zip"
+        def remoteUrl = "https://github.com/crunixx77-cmyk/nujuma-app/releases/download/v2.1.0/b.zip"
         
         logger.quiet("Downloading bundle from " + remoteUrl + " ...")
         zipFile.parentFile.mkdirs()
