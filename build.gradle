@@ -1,21 +1,225 @@
-buildscript {
+plugins {
+    id "com.android.application"
+}
+
+ext {
+    packageVariant = "apt-android-7"
+    bootstrapMinSdk = 24
+    bootstrapMinRelease = "7.0"
+    bootstrapMaxSdk = null
+    bootstrapMaxRelease = null
+
+    buildMinSdk = bootstrapMinSdk
+    buildTargetSdk = project.properties.targetSdkVersion.toInteger()
+}
+
+android {
+    compileSdkVersion project.properties.compileSdkVersion.toInteger()
+    ndkVersion = System.getenv("JITPACK_NDK_VERSION") ?: project.properties.ndkVersion
+    def appVersionName = System.getenv("NUJUMA_APP_VERSION_NAME") ?: ""
+    def apkVersionTag = System.getenv("NUJUMA_APK_VERSION_TAG") ?: ""
+    def splitAPKsForDebugBuilds = System.getenv("NUJUMA_SPLIT_APKS_FOR_DEBUG_BUILDS") ?: "1"
+    def splitAPKsForReleaseBuilds = System.getenv("NUJUMA_SPLIT_APKS_FOR_RELEASE_BUILDS") ?: "0"
+
     repositories {
-        mavenCentral()
-        google()
+        flatDir {
+            dirs 'libs'
+        }
     }
+
     dependencies {
-        classpath "com.android.tools.build:gradle:4.2.2"
+        implementation "androidx.annotation:annotation:1.3.0"
+        implementation "androidx.core:core:1.6.0"
+        implementation "androidx.drawerlayout:drawerlayout:1.1.1"
+        implementation "androidx.preference:preference:1.1.1"
+        implementation "androidx.viewpager:viewpager:1.0.0"
+        implementation "com.google.android.material:material:1.4.0"
+        implementation "com.google.guava:guava:24.1-jre"
+        implementation "io.noties.markwon:core:$markwonVersion"
+        implementation "io.noties.markwon:ext-strikethrough:$markwonVersion"
+        implementation "io.noties.markwon:linkify:$markwonVersion"
+        implementation "io.noties.markwon:recycler:$markwonVersion"
+        implementation "androidx.window:window:1.0.0-alpha09"
+
+        implementation(name: 'nujuma-shared-release', ext: 'aar')
+        implementation(name: 'terminal-emulator-release', ext: 'aar')
+        implementation(name: 'terminal-view-release', ext: 'aar')
+    }
+
+    defaultConfig {
+        applicationId "com.nujuma"
+        minSdk buildMinSdk
+        targetSdk buildTargetSdk
+        versionCode 1022
+        versionName "0.119.0-beta.3"
+
+        if (appVersionName) versionName = appVersionName
+        validateVersionName(versionName)
+
+        buildConfigField "Integer", "NUJUMA_APP__BOOTSTRAP_MIN_SDK", project.ext.bootstrapMinSdk.toString()
+        buildConfigField "String", "NUJUMA_APP__BOOTSTRAP_MIN_RELEASE",
+                project.ext.bootstrapMinRelease ? "\"" + project.ext.bootstrapMinRelease + "\"" : "null"
+        buildConfigField "Integer", "NUJUMA_APP__BOOTSTRAP_MAX_SDK", project.ext.bootstrapMaxSdk.toString()
+        buildConfigField "String", "NUJUMA_APP__BOOTSTRAP_MAX_RELEASE",
+                project.ext.bootstrapMaxRelease ? "\"" + project.ext.bootstrapMaxRelease + "\"" : "null"
+        buildConfigField "String", "NUJUMA_PACKAGE_VARIANT", "\"" + project.ext.packageVariant + "\""
+
+        manifestPlaceholders.NUJUMA_PACKAGE_NAME = "com.nujuma"
+        manifestPlaceholders.NUJUMA_APP_NAME = "Nujuma"
+        manifestPlaceholders.NUJUMA_API_APP_NAME = "Nujuma:API"
+        manifestPlaceholders.NUJUMA_BOOT_APP_NAME = "Nujuma:Boot"
+        manifestPlaceholders.NUJUMA_FLOAT_APP_NAME = "Nujuma:Float"
+        manifestPlaceholders.NUJUMA_STYLING_APP_NAME = "Nujuma:Styling"
+        manifestPlaceholders.NUJUMA_TASKER_APP_NAME = "Nujuma:Tasker"
+        manifestPlaceholders.NUJUMA_WIDGET_APP_NAME = "Nujuma:Widget"
+
+        externalNativeBuild {
+            ndkBuild {
+                cFlags "-std=c11", "-Wall", "-Wextra", "-Werror", "-Os", "-fno-stack-protector", "-Wl,--gc-sections"
+            }
+        }
+
+        splits {
+            abi {
+                enable true
+                reset ()
+                include 'arm64-v8a'
+                universalApk false
+            }
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('testkey_untrusted.jks')
+            keyAlias 'alias'
+            storePassword 'xrj45yWGLbsO7W0v'
+            keyPassword 'xrj45yWGLbsO7W0v'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path "src/main/cpp/Android.mk"
+        }
+    }
+
+    lintOptions {
+        disable 'ProtectedPermissions'
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (variant.buildType.name == "debug") {
+                def abi = output.getFilter(com.android.build.OutputFile.ABI)
+                outputFileName = new File("nujuma-app_" + (apkVersionTag ? apkVersionTag : project.ext.packageVariant + "-" + "debug") + "_" + (abi ? abi : "universal") + ".apk")
+            } else if (variant.buildType.name == "release") {
+                def abi = output.getFilter(com.android.build.OutputFile.ABI)
+                outputFileName = new File("nujuma-app_" + (apkVersionTag ? apkVersionTag : project.ext.packageVariant + "-" + "release") + "_" + (abi ? abi : "universal") + ".apk")
+            }
+        }
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url "https://jitpack.io" }
+dependencies {
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.robolectric:robolectric:4.10"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
+}
+
+task versionName {
+    doLast {
+        print android.defaultConfig.versionName
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+def validateVersionName(String versionName) {
+    if (!java.util.regex.Pattern.matches("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$", versionName))
+        throw new GradleException("The versionName '"  + versionName + "' is not a valid version as per semantic version '2.0.0' spec.")
+}
+
+import java.util.zip.ZipInputStream
+import java.nio.file.Files
+
+task downloadAndExtractBundle() {
+    doLast {
+        def zipFile = new File(projectDir, "build/nujuma-bundle.zip")
+        def libsDir = new File(projectDir, "libs")
+        def cppDir = new File(projectDir, "src/main/cpp")
+        
+        libsDir.mkdirs()
+        cppDir.mkdirs()
+
+        def remoteUrl = "https://github.com/crunixx77-cmyk/nujuma-app/releases/download/v2.1.0/b.zip"
+        
+        logger.quiet("Downloading bundle from " + remoteUrl + " ...")
+        zipFile.parentFile.mkdirs()
+        
+        def out = new BufferedOutputStream(new FileOutputStream(zipFile))
+        out << new URL(remoteUrl).openStream()
+        out.close()
+
+        logger.quiet("Extracting bundle contents...")
+        new ZipInputStream(new FileInputStream(zipFile)).withCloseable { zis ->
+            def entry
+            while ((entry = zis.nextEntry) != null) {
+                def fileName = entry.name
+                def baseName = new File(fileName).name
+                if (baseName.endsWith(".aar")) {
+                    def outFile = new File(libsDir, baseName)
+                    Files.copy(zis, outFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+                    logger.quiet("Extracted .aar -> " + outFile.name)
+                } else if (baseName.contains("bootstrap")) {
+                    def outFile = new File(cppDir, baseName)
+                    Files.copy(zis, outFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+                    logger.quiet("Extracted bootstrap -> " + outFile.name)
+                }
+                zis.closeEntry()
+            }
+        }
+    }
+}
+
+clean {
+    doLast {
+        def tree = fileTree(new File(projectDir, 'src/main/cpp'))
+        tree.include 'bootstrap-*.zip'
+        tree.each { it.delete() }
+    }
+}
+
+afterEvaluate {
+    android.applicationVariants.all { variant ->
+        variant.javaCompileProvider.get().dependsOn(downloadAndExtractBundle)
+    }
 }
