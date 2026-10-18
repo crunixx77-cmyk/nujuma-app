@@ -39,6 +39,7 @@ android {
         implementation "io.noties.markwon:ext-strikethrough:$markwonVersion"
         implementation "io.noties.markwon:linkify:$markwonVersion"
         implementation "io.noties.markwon:recycler:$markwonVersion"
+        implementation "androidx.window:window:1.0.0-alpha09"
 
         implementation(name: 'Nujuma-shared-debug', ext: 'aar')
         implementation(name: 'terminal-emulator-debug', ext: 'aar')
